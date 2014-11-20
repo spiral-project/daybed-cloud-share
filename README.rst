@@ -30,13 +30,13 @@ Then the document is decrypted by the participant with dKey.
 The public-key sharing
 ++++++++++++++++++++++
 
- - Each participant generate a key-pair (pPub, pPriv)
- - Then it upload its pPub to a Daybed document: daybed:cloud-share:pubkey-store/{hawkId}
+ - Each participant generates a key-pair (pPub, pPriv)
+ - Then he uploads pPub to a Daybed document: daybed:cloud-share:pubkey-store/{hawkId}
 
 When the owner wants to add a participant, it can ask the public-key
 linked to his hawkid to daybed.
 
-It is not possible to add a user that didn't register its public-key to daybed first.
+It is not possible to add a user that didn't register his public-key to daybed first.
 
 
 How to use the tool?
@@ -93,7 +93,7 @@ Share a document
     $ cloud-crypt share bibogahy 5e5ebe7af77d5d9a41677b217318bbd1
     5e5ebe7af77d5d9a41677b217318bbd1: Public Key not found
 
-**If the user have got a public-key**
+**If the user has a public-key**
 
 .. code-block:: bash
 
