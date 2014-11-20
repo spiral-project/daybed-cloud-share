@@ -16,13 +16,14 @@ How does it works
 The encrypted file-sharing
 ++++++++++++++++++++++++++
 
-A participant DH key-pair (dhPub, dhPriv)
-Each a participant has a key-pair (pPub, pPriv).
+Each a participant has a key-pair (pubKey, privKey).
 A document has a secret-key: dKey
+And we also create a temporary keypair: (temp_pub_key, temp_priv_key)
 
-The document is encrypted with dKey: dCrypt.
-The dKey is encrypted for each participant with: DH(dhPriv, dhPub): pdKeyCrypt.
-The dKey is decrypted by a participant with: DH(dhPub, pPriv): dKey
+
+The document is encrypted with dKey: encrypted_document.
+The dKey is encrypted for each participant with: PublicBox(temp_priv_key, pubKey): encrypted_key.
+The dKey is decrypted by a participant with: DH(privKey, temp_pub_key): dKey
 
 Then the document is decrypted by the participant with dKey.
 

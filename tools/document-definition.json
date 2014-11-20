@@ -22,13 +22,6 @@
                 "name": "participantsKeys",
                 "required": true,
                 "type": "json"
-            },
-            {
-                "hint": "Participant Public DH key.",
-                "label": "Public DH key",
-                "name": "publicDHKeys",
-                "required": true,
-                "type": "json"
             }
         ]
     }, 
