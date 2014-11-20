@@ -1,0 +1,24 @@
+{
+    "definition": {
+        "description": "Daybed Public Key Store", 
+        "fields": [
+            {
+                "hint": "The public key", 
+                "label": "PublicKey", 
+                "name": "pub", 
+                "required": true, 
+                "type": "string"
+            }
+        ], 
+        "title": "publickey-store"
+    }, 
+    "permissions": {
+        "Everyone": [
+            "create_record", 
+            "delete_own_records", 
+            "read_definition", 
+            "read_all_records", 
+            "update_own_records"
+        ]
+    }
+}

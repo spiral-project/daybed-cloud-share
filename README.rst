@@ -16,13 +16,13 @@ How does it works
 The encrypted file-sharing
 ++++++++++++++++++++++++++
 
-The owner has a key-pair (oPub, oPriv)
+A participant DH key-pair (dhPub, dhPriv)
 Each a participant has a key-pair (pPub, pPriv).
 A document has a secret-key: dKey
 
 The document is encrypted with dKey: dCrypt.
-The dKey is encrypted for each participant with: DH(oPriv, pPub): pdKeyCrypt.
-The dKey is decrypted by a participant with: DH(oPub, pPriv): dKey
+The dKey is encrypted for each participant with: DH(dhPriv, dhPub): pdKeyCrypt.
+The dKey is decrypted by a participant with: DH(dhPub, pPriv): dKey
 
 Then the document is decrypted by the participant with dKey.
 
@@ -31,7 +31,7 @@ The public-key sharing
 ++++++++++++++++++++++
 
  - Each participant generate a key-pair (pPub, pPriv)
- - Then it upload its pPub to a Daybed document: daybed:cloud-share:pub/{hawkId}
+ - Then it upload its pPub to a Daybed document: daybed:cloud-share:pubkey-store/{hawkId}
 
 When the owner wants to add a participant, it can ask the public-key
 linked to his hawkid to daybed.
