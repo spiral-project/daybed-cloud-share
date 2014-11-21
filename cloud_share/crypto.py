@@ -86,7 +86,6 @@ def encrypt_key(message_key, recipient_pub_key):
     recipient_pub_key = PublicKey(
         recipient_pub_key,
         HexEncoder)
-    print(temp_private_key, recipient_pub_key)
     box = PublicBox(temp_private_key, recipient_pub_key)
     nonce = nacl.utils.random(PublicBox.NONCE_SIZE)
     encrypted_key = box.encrypt(message_key, nonce, Base64Encoder)

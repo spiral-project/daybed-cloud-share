@@ -72,7 +72,7 @@ def upload():
     message_key, encrypted_message = encrypt_message(content)
 
     # 5. Encrypt the document key with the user key
-    encrypted_key = encrypt_key(message_key, public_key)
+    encrypted_key = encrypt_key(message_key, public_key.encode(HexEncoder))
 
     # 6. Upload the document
     doc_id = daybed.upload_document(filename, encrypted_message,
@@ -96,7 +96,6 @@ def get_documents():
 
 def list():
     documents, _, _, _ = get_documents()
-    print([d['participantsKeys'] for d in documents])
     for key, value in ((d['id'], d['filename']) for d in documents):
         print("- %s: %s" % (key, value))
 
@@ -117,7 +116,6 @@ def download():
     doc = docs[doc_id]
     hawk_id = daybed.hawk_id
     filename = doc['filename']
-    print(doc)
     params = {
         "encrypted_message": doc['content'],
         "encrypted_key": doc['participantsKeys'][hawk_id]['encrypted_key'],
