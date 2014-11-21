@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 import json
 
 import requests
@@ -131,3 +133,23 @@ class DaybedClient(object):
             print(r.json())
             raise
         return r.json()['records']
+
+    def add_author_to_document(self, new_hawk_id, doc_id):
+        url = self.build_url("/models/%s/records/%s/authors" % (
+            config.get("document_model_id"), doc_id))
+        r = self.session.patch(url, data=json.dumps([new_hawk_id]))
+        try:
+            r.raise_for_status()
+        except HTTPError:
+            print(r.json())
+            raise
+
+    def delete_document(self, doc_id):
+        url = self.build_url("/models/%s/records/%s" % (
+            config.get("document_model_id"), doc_id))
+        r = self.session.delete(url)
+        try:
+            r.raise_for_status()
+        except HTTPError:
+            print(r.json())
+            raise

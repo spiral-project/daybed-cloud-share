@@ -3,6 +3,7 @@
 Upload a file for the current user.
 
 """
+from __future__ import unicode_literals, print_function
 import json
 import os
 import sys
@@ -95,6 +96,7 @@ def get_documents():
 
 def list():
     documents, _, _, _ = get_documents()
+    print([d['participantsKeys'] for d in documents])
     for key, value in ((d['id'], d['filename']) for d in documents):
         print("- %s: %s" % (key, value))
 
@@ -115,6 +117,7 @@ def download():
     doc = docs[doc_id]
     hawk_id = daybed.hawk_id
     filename = doc['filename']
+    print(doc)
     params = {
         "encrypted_message": doc['content'],
         "encrypted_key": doc['participantsKeys'][hawk_id]['encrypted_key'],
@@ -157,6 +160,22 @@ def share():
 
     doc['participantsKeys'][new_hawk_id] = new_participant_key
     daybed.upload_document(doc['filename'], doc['content'],
-                           doc['participantsKeys'])
+                           doc['participantsKeys'], doc_id)
+    daybed.add_author_to_document(new_hawk_id, doc_id)
     print("%s: %s has been shared with %s" % (doc['id'], doc['filename'],
                                               new_hawk_id))
+
+
+def delete():
+    if len(sys.argv) != 2:
+        print("USAGE: %s docId" % sys.argv[0])
+        sys.exit(1)
+
+    doc_id = sys.argv[1]
+
+    key_filepath = os.path.expanduser(KEY_FILE)
+    daybed = DaybedClient()
+    private_key, public_key, _ = load_config(daybed, key_filepath)
+
+    daybed.delete_document(doc_id)
+    print("%s has been removed." % doc_id)

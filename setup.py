@@ -26,5 +26,6 @@ setup(name='daybed-cloud-share',
               'cloud-share-upload = cloud_share.cli:upload',
               'cloud-share-list = cloud_share.cli:list',
               'cloud-share-download = cloud_share.cli:download',
-              'cloud-share = cloud_share.cli:share',
+              'cloud-share-delete = cloud_share.cli:delete',
+              'cloud-share-with = cloud_share.cli:share',
           ]})
