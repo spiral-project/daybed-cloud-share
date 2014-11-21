@@ -58,7 +58,7 @@ List your document
 
 .. code-block:: bash
 
-    $ cloud-crypt -i ~/.daybed-cloud-crypt.key list
+    $ cloud-share-list
 
     - ketulosa: natim/report.pdf
     - acetyrei: alexis/anotation.odt
@@ -69,7 +69,7 @@ Download a document
 
 .. code-block:: bash
 
-    $ cloud-crypt get ketulosa
+    $ cloud-share-download ketulosa
     /tmp/report.pdf has been saved.
 
 You can use the ``-o`` option to select another destination path.
@@ -80,7 +80,7 @@ Upload a document
 
 .. code-block:: bash
 
-    $ cloud-crypt upload image.gif
+    $ cloud-share-upload image.gif
 	bibogahy: image.gif has been uploaded.
 
 
@@ -91,14 +91,14 @@ Share a document
 
 .. code-block:: bash
 
-    $ cloud-crypt share bibogahy 5e5ebe7af77d5d9a41677b217318bbd1
+    $ cloud-share-with bibogahy 5e5ebe7af77d5d9a41677b217318bbd1
     5e5ebe7af77d5d9a41677b217318bbd1: Public Key not found
 
 **If the user has a public-key**
 
 .. code-block:: bash
 
-    $ cloud-crypt share bibogahy f61ca1751ba322a42fc370b6e6121543
+    $ cloud-share-with bibogahy f61ca1751ba322a42fc370b6e6121543
 	bibogahy: image.gif has been shared with f61ca1751ba322a42fc370b6e6121543
 
 
@@ -107,7 +107,7 @@ Unshare a document
 
 .. code-block:: bash
 
-    $ cloud-crypt unshare bibogahy f61ca1751ba322a42fc370b6e6121543
+    $ cloud-share-remove bibogahy f61ca1751ba322a42fc370b6e6121543
 	bibogahy is not anymore shared with f61ca1751ba322a42fc370b6e6121543
 
 
