@@ -116,5 +116,5 @@ Delete a document
 
 .. code-block:: bash
 
-    $ cloud-crypt delete bibogahy
+    $ cloud-share-delete bibogahy
 	bibogahy has been deleted
