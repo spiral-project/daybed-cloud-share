@@ -9,8 +9,25 @@ The project is two-fold:
 - enable public-key sharing in between peers;
 - share a secret key in between each participants.
 
-How to use the tool?
---------------------
+How to install it?
+------------------
+
+The fastest way to install the project is to checkout it from github and
+install it locally.
+
+You'll need to install `libffi-dev` to use it. On debuntu::
+
+  $ sudo apt-get install libffi-dev
+
+And then::
+
+  $ git clone https://github.com/spiral-project/daybed-cloud-share.git
+  $ cd daybed-cloud-share
+  $ mkvirtualenv daybed-cloud-share
+  $ pip install -e .
+
+How to use it?
+--------------
 
 The daybed-cloud-crypt.key file
 ++++++++++++++++++++++++++++++++
