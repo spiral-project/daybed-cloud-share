@@ -120,6 +120,19 @@ class DaybedClient(object):
             raise
         return r.json()['id']
 
+    def update_participant_keys(self, doc_id, new_participants_keys):
+        url = self.build_url("/models/%s/records/%s" % (
+            config.get("document_model_id"), doc_id))
+        data = json.dumps({
+            "participantsKeys": new_participants_keys
+        })
+        r = self.session.patch(url, data=data)
+        try:
+            r.raise_for_status()
+        except HTTPError:
+            print(r.json())
+            raise
+
     def list_documents(self):
         """List user documents.
 
@@ -134,6 +147,16 @@ class DaybedClient(object):
             raise
         return r.json()['records']
 
+    def delete_document(self, doc_id):
+        url = self.build_url("/models/%s/records/%s" % (
+            config.get("document_model_id"), doc_id))
+        r = self.session.delete(url)
+        try:
+            r.raise_for_status()
+        except HTTPError:
+            print(r.json())
+            raise
+
     def add_author_to_document(self, new_hawk_id, doc_id):
         url = self.build_url("/models/%s/records/%s/authors" % (
             config.get("document_model_id"), doc_id))
@@ -144,10 +167,10 @@ class DaybedClient(object):
             print(r.json())
             raise
 
-    def delete_document(self, doc_id):
-        url = self.build_url("/models/%s/records/%s" % (
+    def remove_author_from_document(self, hawk_id, doc_id):
+        url = self.build_url("/models/%s/records/%s/authors" % (
             config.get("document_model_id"), doc_id))
-        r = self.session.delete(url)
+        r = self.session.patch(url, data=json.dumps(['-%s' % hawk_id]))
         try:
             r.raise_for_status()
         except HTTPError:

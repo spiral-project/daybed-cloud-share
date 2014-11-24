@@ -129,6 +129,21 @@ def download():
     print("%s has been downloaded at %s" % (doc_id, output_path))
 
 
+def delete():
+    if len(sys.argv) != 2:
+        print("USAGE: %s docId" % sys.argv[0])
+        sys.exit(1)
+
+    doc_id = sys.argv[1]
+
+    key_filepath = os.path.expanduser(KEY_FILE)
+    daybed = DaybedClient()
+    private_key, public_key, _ = load_config(daybed, key_filepath)
+
+    daybed.delete_document(doc_id)
+    print("%s has been removed." % doc_id)
+
+
 def share():
     if len(sys.argv) != 3:
         print("USAGE: %s docId newParticipantHawkId" % sys.argv[0])
@@ -157,23 +172,31 @@ def share():
     new_participant_key = encrypt_key(message_key, new_participant_pub_key)
 
     doc['participantsKeys'][new_hawk_id] = new_participant_key
-    daybed.upload_document(doc['filename'], doc['content'],
-                           doc['participantsKeys'], doc_id)
+    daybed.update_participant_keys(doc_id, doc['participantsKeys'])
     daybed.add_author_to_document(new_hawk_id, doc_id)
     print("%s: %s has been shared with %s" % (doc['id'], doc['filename'],
                                               new_hawk_id))
 
 
-def delete():
-    if len(sys.argv) != 2:
-        print("USAGE: %s docId" % sys.argv[0])
+def unshare():
+    if len(sys.argv) != 3:
+        print("USAGE: %s docId participantId" % sys.argv[0])
         sys.exit(1)
 
     doc_id = sys.argv[1]
+    hawk_id = sys.argv[2]
 
-    key_filepath = os.path.expanduser(KEY_FILE)
-    daybed = DaybedClient()
-    private_key, public_key, _ = load_config(daybed, key_filepath)
+    documents, private_key, public_key, daybed = get_documents()
+    docs = dict(((d['id'], d) for d in documents))
+    if doc_id not in docs.keys():
+        print("%s not found in %s" % (doc_id, docs.keys()))
+        sys.exit(2)
 
-    daybed.delete_document(doc_id)
-    print("%s has been removed." % doc_id)
+    participant_keys = docs[doc_id]['participantsKeys']
+    if hawk_id in participant_keys:
+        del participant_keys[hawk_id]
+
+    daybed.update_participant_keys(doc_id, participant_keys)
+    daybed.remove_author_from_document(hawk_id, doc_id)
+
+    print("%s has been unshare from %s." % (hawk_id, doc_id))
