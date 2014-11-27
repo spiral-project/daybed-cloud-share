@@ -1,0 +1,56 @@
+{
+  "name": "daybed-cloud-share",
+  "version": "0.0.1",
+  "description": "A tool to share encrypted files between peoples.",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "gulp deploy",
+    "dist": "gulp dist",
+    "lint": "jsxhint -c .jshintrc src/js",
+    "start": "gulp",
+    "test": "jest --config jest-config.json && npm run lint",
+    "outdated": "npm outdated --depth 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spiral-project/daybed-cloud-share"
+  },
+  "keywords": [
+    "react",
+    "daybed",
+    "cloud",
+    "file",
+    "sharing",
+    "encrypted"
+  ],
+  "author": "Spiral Project <spiral-project@lolnet.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spiral-project/daybed-cloud-share/issues"
+  },
+  "homepage": "https://github.com/spiral-project/daybed-cloud-share",
+  "dependencies": {
+    "browserify": "6.2.0",
+    "daybed.js": "0.1.6",
+    "fluxxor": "1.5.0",
+    "gulp": "^3.8.*",
+    "gulp-gh-pages": "^0.4.*",
+    "gulp-rename": "1.2.0",
+    "gulp-uglify": "1.0.1",
+    "gulp-webserver": "0.8.4",
+    "react": "^0.12.*",
+    "react-bootstrap": "^0.12.*",
+    "react-components": "^0.1.*",
+    "react-router-bootstrap": "0.5.0",
+    "reactify": "^0.14.*",
+    "string": "2.2.0",
+    "vinyl-source-stream": "^1.0.*",
+    "underscore": "1.7.0",
+    "watchify": "^2.1.0"
+  },
+  "devDependencies": {
+    "jest-cli": "latest",
+    "jsxhint": "latest",
+    "react-tools": "latest"
+  }
+}
