@@ -4,3 +4,4 @@
 __pycache__/
 html5/build/
 html5/node_modules/
+html5/npm-debug.log

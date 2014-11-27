@@ -3,36 +3,27 @@
 var Fluxxor = require("fluxxor");
 
 var constants = {
+  SET_INITIAL_DATA: "SET_INITIAL_DATA"
 };
 
 
 var FilesStore = Fluxxor.createStore({
   initialize: function() {
-    this.files = [{
-      "id": "blablabla",
-      "filename": "giphy.gif"
-    }];
+    this.files = [];
 
     // XXX. Make this evolve, it's a pain.
     this.bindActions(
-      // constants.ADD_FORM_ELEMENT, this.onAdd,
+      constants.SET_INITIAL_DATA, this.setInitialData
     );
   },
 
   setInitialData: function(payload) {
     if (payload === undefined) {
-      payload = {
-        files: []
-      };
+      payload = [];
     }
-    this.files = payload.files;
+    this.files = payload;
     this.emit("change");
   },
-
-  // onAdd: function(payload) {
-  //   this.record[payload.name] = payload.value;
-  //   this.emit("change");
-  // },
 
   getState: function() {
     return {
@@ -42,12 +33,9 @@ var FilesStore = Fluxxor.createStore({
 });
 
 var actions = {
-  // addFormElement: function(fieldType, defaultData) {
-  //   this.dispatch(constants.ADD_FORM_ELEMENT, {
-  //     fieldType: fieldType,
-  //     defaultData: defaultData
-  //   });
-  // },
+  setInitialData: function(data) {
+    this.dispatch(constants.SET_INITIAL_DATA, data);
+  }
 };
 
 var stores = {

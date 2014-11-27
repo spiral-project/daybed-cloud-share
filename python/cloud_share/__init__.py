@@ -3,5 +3,5 @@
 config = {
     "pubkey_store_model_id": "daybed:cloud_share:pubkey_store",
     "document_model_id": "daybed:cloud_share:document",
-    "daybed_server": "https://daybed.io/v1"
+    "daybed_server": "http://localhost:8000/v1"
 }

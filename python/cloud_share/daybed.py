@@ -67,10 +67,14 @@ class DaybedClient(object):
             self.hawk_id
         ))
         data = json.dumps({
+            "hawk_id": self.hawk_id,
             "pub": public_key
         })
         r = self.session.put(url, data=data)
-        r.raise_for_status()
+        try:
+            r.raise_for_status()
+        except HTTPError:
+            raise ValueError(r.json())
 
     def get_public_key(self, identifier):
         """Returns a public key for the given identifier.

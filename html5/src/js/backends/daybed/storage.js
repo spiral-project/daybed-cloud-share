@@ -4,6 +4,8 @@ var DaybedStorage = function(config) {
   this.host = config.daybedHost;
 };
 
+var DOCUMENT_MODEL = "daybed:cloud_share:document";
+
 DaybedStorage.prototype = {
 
   bindSession: function(hawkToken) {
@@ -27,14 +29,14 @@ DaybedStorage.prototype = {
         Object.keys(record).forEach(function(key) {
           result[slugify(key)] = record[key];
         });
-        return session.saveRecord(formId, result);
+        return session.saveRecord(DOCUMENT_MODEL, result);
       });
   },
 
   loadFiles: function(hawkToken) {
     return this.bindSession(hawkToken)
       .then(function(session){
-        return session.getRecords(formId);
+        return session.getRecords(DOCUMENT_MODEL);
       });
   }
 };

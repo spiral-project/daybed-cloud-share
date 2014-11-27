@@ -19,6 +19,17 @@ var CloudShareApp = React.createClass({
     StoreWatchMixin("FilesStore")
   ],
 
+  componentDidMount: function() {
+    this.loadFiles();
+  },
+
+  loadFiles: function() {
+    var hawkId = localStorage.getItem("cloud-share:Hawk-Session-Token");
+    this.props.backend.loadFiles(hawkId).then(function(doc) {
+      this.getFlux().actions.setInitialData(doc.records);
+    }.bind(this));
+  },
+
   getStateFromFlux: function() {
     return this.getFlux().store("FilesStore").getState();
   },
@@ -27,7 +38,7 @@ var CloudShareApp = React.createClass({
     return (
       <div className="site-wrapper">
         <div className="site-wrapper-inner">
-          <div className="cover-container">
+        <div className="cover-container">
             <Header />
 
             <FileDropZone uploadFile={console.log} />
