@@ -11,9 +11,10 @@ var FilesList = React.createClass({
       <ul className="lead">
       {
         this.props.files.map(function(file) {
+          var fileContent = "data:text/plain;base64," + btoa(file.content);
           return (
             <li key={file.id}>
-              <a href="#"><i className="fa-file fa fa-1x"></i>
+              <a href={fileContent} download={file.filename}><i className="fa-file fa fa-1x"></i>
               &nbsp;&nbsp; {file.filename}</a>
             </li>);
         })
