@@ -33,10 +33,7 @@ var FilesStore = Fluxxor.createStore({
 
   getState: function() {
     return {
-      formElements: this.elements,
-      metadata: this.metadata,
-      record: this.record,
-      formStatus: this.formStatus
+      files: this.files
     };
   }
 });
