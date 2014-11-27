@@ -11,6 +11,7 @@ var Header = require("./Header");
 var FileDropZone = require("./FileDropZone");
 var FilesList = require("./FilesList");
 
+var Footer = require("./Footer");
 
 var CloudShareApp = React.createClass({
   mixins: [
@@ -24,10 +25,18 @@ var CloudShareApp = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <Header />
-        <FileDropZone uploadFile={console.log} />
-        <FilesList />
+      <div className="site-wrapper">
+        <div className="site-wrapper-inner">
+          <div className="cover-container">
+            <Header />
+
+            <FileDropZone uploadFile={console.log} />
+
+            <FilesList files={this.state.files} />
+
+            <Footer />
+          </div>
+        </div>
       </div>
       );
   }

@@ -8,7 +8,10 @@ var constants = {
 
 var FilesStore = Fluxxor.createStore({
   initialize: function() {
-    this.files = [];
+    this.files = [{
+      "id": "blablabla",
+      "filename": "giphy.gif"
+    }];
 
     // XXX. Make this evolve, it's a pain.
     this.bindActions(

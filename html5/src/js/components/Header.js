@@ -7,19 +7,18 @@ var React = require("react");
 var Header = React.createClass({
   render: function() {
     return (
-      <div className="navbar navbar-default navbar-static-top" role="navigation">
-      <div className="container">
-        <div className="navbar-header">
-          <a className="navbar-brand" href="#">Daybed Cloud Share</a>
-        </div>
-        <div className="navbar-collapse collapse">
-          <ul className="nav navbar-nav navbar-right">
-            <li><a href="http://daybed.readthedocs.org/en/latest/#why">Our values</a></li>
-            <li><a href="https://github.com/spiral-project/daybed-cloud-share">Fork me !</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>);
+          <div className="masthead clearfix">
+            <div className="inner">
+              <h3 className="masthead-brand"><a href="/">Daybed Cloud Share</a></h3>
+              <nav>
+                <ul className="nav masthead-nav">
+                  {/*<li className="active"><a href="/">Home</a></li>*/}
+                  <li><a href="http://daybed.readthedocs.org/en/latest/#why">Our values</a></li>
+                  <li><a href="https://github.com/spiral-project/daybed-cloud-share">Fork me !</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>);
   }
 });
 
