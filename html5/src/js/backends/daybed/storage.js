@@ -6,8 +6,27 @@ var DaybedStorage = function(config) {
 
 var DOCUMENT_MODEL = "daybed:cloud_share:document";
 var PUBLIC_KEY_MODEL = "daybed:cloud_share:pubkey_store";
+var DAYBED_HOST = "http://localhost:8000";
 
 DaybedStorage.prototype = {
+
+  login: function() {
+    return Daybed.fxaOAuth.login(DAYBED_HOST, {
+      redirect_uri: document.location.href + "#/connect"
+    });
+  },
+
+  getToken: function(code, state) {
+    console.log("getToken", code, state);
+    return Daybed.fxaOAuth.getToken(DAYBED_HOST, {code: code, state: state})
+      .then(function(data) {
+        return {
+          keypair: crypto.generateKeypair(data.profile.uid),
+          token: data.token,
+          hawkId: data.hawkId
+        };
+      });
+  },
 
   bindSession: function(hawkToken) {
     var credentials;
@@ -38,9 +57,7 @@ DaybedStorage.prototype = {
   loadFiles: function(hawkToken) {
     return this.bindSession(hawkToken)
       .then(function(session){
-        result = session.getRecords(DOCUMENT_MODEL)
-        result.hawkId = session.credentials.id;
-        return result;
+        return session.getRecords(DOCUMENT_MODEL)
       });
   },
 

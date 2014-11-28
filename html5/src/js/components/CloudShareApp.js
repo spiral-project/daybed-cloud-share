@@ -29,25 +29,25 @@ var CloudShareApp = React.createClass({
   },
 
   loadFiles: function() {
-    var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
-    this.props.backend.loadFiles(hawkToken).then(function(doc) {
-      this.getFlux().actions.setInitialData(doc);
-    }.bind(this));
+    this.props.backend.loadFiles(this.state.hawkSessionToken)
+      .then(function(doc) {
+        this.getFlux().actions.setFiles(doc.records);
+      }.bind(this));
   },
 
   uploadFile: function(filename, encryptedMessage, participantKey) {
-    var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
     var participantsKeys = {};
     participantsKeys[this.state.hawkId] = participantKey;
     this.props.backend.uploadFile(
-      hawkToken, filename, encryptedMessage, participantsKeys
+      this.state.hawkSessionToken,
+      filename, encryptedMessage, participantsKeys
     ).then(this.loadFiles);
   },
 
   removeFile: function(fileId) {
     return function() {
-      var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
-      this.props.backend.removeFile(hawkToken, fileId).then(this.loadFiles);
+      this.props.backend.removeFile(this.state.hawkSessionToken, fileId)
+        .then(this.loadFiles);
     }.bind(this);
   },
 
@@ -102,7 +102,7 @@ var CloudShareApp = React.createClass({
       <div className="site-wrapper">
         <div className="site-wrapper-inner">
         <div className="cover-container">
-            <Header />
+            <Header backend={this.props.backend}/>
             <FileDropZone upload={this.uploadFile} />
             <FilesList files={this.state.files} hawkId={this.state.hawkId}
                        removeFile={this.removeFile} shareFile={this.shareFile} />

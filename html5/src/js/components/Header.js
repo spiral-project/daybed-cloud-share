@@ -5,6 +5,11 @@
 var React = require("react");
 
 var Header = React.createClass({
+  login: function() {
+    this.props.backend.login().catch(function(err) {
+        console.log(err);
+      });
+    },
   render: function() {
     return (
           <div className="masthead clearfix">
@@ -13,6 +18,7 @@ var Header = React.createClass({
               <nav>
                 <ul className="nav masthead-nav">
                   {/*<li className="active"><a href="/">Home</a></li>*/}
+                  <li><a href="#" onClick={this.login}>Login</a></li>
                   <li><a href="http://daybed.readthedocs.org/en/latest/#why">Our values</a></li>
                   <li><a href="https://github.com/spiral-project/daybed-cloud-share">Fork me !</a></li>
                 </ul>
