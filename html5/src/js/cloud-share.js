@@ -8,6 +8,7 @@ var flux = require("./flux").flux;
 
 var CloudShareApp = require("./components/CloudShareApp");
 
+var crypto = require('./crypto.js');
 var backend = new DaybedBackend(document.cloudshare.config);
 
 React.renderComponent(
