@@ -129,7 +129,7 @@ body {
 	margin: 120px 0 50px 0;
 }
 
-#drop-zone:hover {
+#drop-zone:hover, #drop-zone.over {
 	border: 8px dashed #ddd;
 	color: #ddd;
 	margin-top: 115px;

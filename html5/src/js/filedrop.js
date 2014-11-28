@@ -2482,7 +2482,7 @@ global.jQuery = function ($) {
       }
     } else if (!options || typeof options == 'object') {
       if (!host) {
-        var zone = new FileDrop(this[0], options)
+        var zone = new global.FileDrop(this[0], options)
         zone.$el = $(this)
         this.first().data('filedrop', zone)
 
@@ -2506,4 +2506,4 @@ global.jQuery = function ($) {
 }
 
 // Alias window.fd.FileDrop class to just window.FileDrop since it's most used.
-exports = global.FileDrop;
+module.exports = global.FileDrop;

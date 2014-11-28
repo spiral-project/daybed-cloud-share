@@ -24,10 +24,17 @@ var CloudShareApp = React.createClass({
   },
 
   loadFiles: function() {
-    var hawkId = localStorage.getItem("cloud-share:Hawk-Session-Token");
-    this.props.backend.loadFiles(hawkId).then(function(doc) {
+    var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
+    this.props.backend.loadFiles(hawkToken).then(function(doc) {
       this.getFlux().actions.setInitialData(doc.records);
     }.bind(this));
+  },
+
+  uploadFile: function(filename, encryptedMessage, participantKey) {
+    var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
+    this.props.backend.uploadFile(
+      hawkToken, filename, encryptedMessage, {'myHawkId': participantKey}
+    ).then(this.loadFiles);
   },
 
   getStateFromFlux: function() {
@@ -41,7 +48,7 @@ var CloudShareApp = React.createClass({
         <div className="cover-container">
             <Header />
 
-            <FileDropZone uploadFile={console.log} />
+            <FileDropZone upload={this.uploadFile} />
 
             <FilesList files={this.state.files} />
 

@@ -22,13 +22,22 @@ DaybedStorage.prototype = {
     }.bind(this));
   },
 
-  storeFile: function(hawkToken, record) {
+  uploadFile: function(hawkToken, filename, encryptedMessage, participantKeys) {
     return this.bindSession(hawkToken)
       .then(function(session) {
-        var result = {};
-        Object.keys(record).forEach(function(key) {
-          result[slugify(key)] = record[key];
+        var keys = {};
+        Object.keys(participantKeys).forEach(function(key) {
+          if (key === "myHawkId") {
+            keys[session.credentials.id] = participantKeys[key];
+          } else {
+            keys[key] = participantKeys[key];
+          }
         });
+        var result = {
+          filename: filename,
+          content: encryptedMessage,
+          participantsKeys: keys
+        };
         return session.saveRecord(DOCUMENT_MODEL, result);
       });
   },

@@ -5,7 +5,7 @@ import nacl.utils
 import nacl.secret
 
 from nacl.public import PublicKey, PrivateKey, Box as PublicBox
-from nacl.encoding import HexEncoder, Base64Encoder
+from nacl.encoding import HexEncoder
 
 
 class SignatureError(Exception):
@@ -36,7 +36,7 @@ def decrypt_key(encrypted_key, temp_public_key, private_key):
 
     message_key = box.decrypt(
         encrypted_key,
-        encoder=Base64Encoder)
+        encoder=HexEncoder)
 
     return message_key
 
@@ -54,7 +54,7 @@ def decrypt_message(encrypted_message, encrypted_key,
     message_box = nacl.secret.SecretBox(message_key)
     message = message_box.decrypt(
         encrypted_message,
-        encoder=Base64Encoder)
+        encoder=HexEncoder)
 
     return message
 
@@ -70,7 +70,7 @@ def encrypt_message(message):
     message_box = nacl.secret.SecretBox(message_key)
     message_nonce = nacl.utils.random(nacl.secret.SecretBox.NONCE_SIZE)
     encrypted_message = message_box.encrypt(message, message_nonce,
-                                            Base64Encoder)
+                                            HexEncoder)
 
     return message_key, encrypted_message
 
@@ -88,7 +88,7 @@ def encrypt_key(message_key, recipient_pub_key):
         HexEncoder)
     box = PublicBox(temp_private_key, recipient_pub_key)
     nonce = nacl.utils.random(PublicBox.NONCE_SIZE)
-    encrypted_key = box.encrypt(message_key, nonce, Base64Encoder)
+    encrypted_key = box.encrypt(message_key, nonce, HexEncoder)
 
     # Return the public key used to cipher the message key.
     return {

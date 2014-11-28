@@ -4,6 +4,8 @@
 
 var React = require("react");
 var FileDrop = require('../filedrop');
+var crypto = require('../crypto');
+
 
 var FileDropZone = React.createClass({
   componentDidMount: function() {
@@ -13,7 +15,25 @@ var FileDropZone = React.createClass({
 
   handleDrop: function(files) {
     files.each(function(file) {
-      console.log(file);
+      var nativeFile = file.nativeFile;
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        // Get file content
+        var content = event.target.result;
+
+        var encrypted = crypto.encryptMessage(content);
+        var messageKey = encrypted.messageKey;
+        var encryptedMessage = encrypted.encryptedMessage;
+
+        var publicKey = localStorage.getItem("cloud-share:pubKey");
+        var encrypted = crypto.encryptDocumentKey(messageKey, publicKey);
+
+        this.props.upload(file.name, encryptedMessage, {
+          'encrypted_key': encrypted.encryptedKey,
+          'temp_public_key': encrypted.tempPublicKey
+        });
+      }.bind(this);
+      reader.readAsDataURL(nativeFile);
     }.bind(this));
   },
 
