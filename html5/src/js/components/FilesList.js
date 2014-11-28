@@ -6,7 +6,6 @@ var React = require("react");
 var crypto = require("../crypto");
 
 function displaySize(bytes) {
-  console.log(bytes);
   if (bytes < 1024) {
     return bytes + " bytes";
   } else if (bytes < Math.pow(1024, 2)) {
@@ -30,8 +29,12 @@ var FilesList = React.createClass({
           );
           return (
             <li key={file.id}>
+              <div className="pull-right">
+                <a href="#" onClick={this.props.removeFile(file.id)}><i className="fa-remove fa fa-1x"></i> Delete</a>
+               </div>
               <a href={fileContent} download={file.filename}><i className="fa-file fa fa-1x"></i>
               &nbsp;&nbsp; {file.filename + " (" + displaySize(fileContent.length) + " )"}</a>
+
             </li>);
         }.bind(this))
       }

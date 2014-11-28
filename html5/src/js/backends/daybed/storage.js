@@ -41,6 +41,13 @@ DaybedStorage.prototype = {
         result.hawkId = session.credentials.id;
         return result;
       });
+  },
+
+  removeFile: function(hawkToken, fileId) {
+    return this.bindSession(hawkToken)
+      .then(function(session){
+        return session.deleteRecord(DOCUMENT_MODEL, fileId);
+      });
   }
 };
 

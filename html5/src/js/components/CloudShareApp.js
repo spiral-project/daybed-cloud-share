@@ -39,6 +39,13 @@ var CloudShareApp = React.createClass({
     ).then(this.loadFiles);
   },
 
+  removeFile: function(fileId) {
+    return function() {
+      var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
+      this.props.backend.removeFile(hawkToken, fileId).then(this.loadFiles);
+    }.bind(this);
+  },
+
   getStateFromFlux: function() {
     return this.getFlux().store("FilesStore").getState();
   },
@@ -50,7 +57,8 @@ var CloudShareApp = React.createClass({
         <div className="cover-container">
             <Header />
             <FileDropZone upload={this.uploadFile} />
-            <FilesList files={this.state.files} hawkId={this.state.hawkId} />
+            <FilesList files={this.state.files} hawkId={this.state.hawkId}
+                       removeFile={this.removeFile} />
             <Footer />
           </div>
         </div>
