@@ -22,21 +22,13 @@ DaybedStorage.prototype = {
     }.bind(this));
   },
 
-  uploadFile: function(hawkToken, filename, encryptedMessage, participantKeys) {
+  uploadFile: function(hawkToken, filename, encryptedMessage, participantsKeys) {
     return this.bindSession(hawkToken)
       .then(function(session) {
-        var keys = {};
-        Object.keys(participantKeys).forEach(function(key) {
-          if (key === "myHawkId") {
-            keys[session.credentials.id] = participantKeys[key];
-          } else {
-            keys[key] = participantKeys[key];
-          }
-        });
         var result = {
           filename: filename,
           content: encryptedMessage,
-          participantsKeys: keys
+          participantsKeys: participantsKeys
         };
         return session.saveRecord(DOCUMENT_MODEL, result);
       });
@@ -45,7 +37,9 @@ DaybedStorage.prototype = {
   loadFiles: function(hawkToken) {
     return this.bindSession(hawkToken)
       .then(function(session){
-        return session.getRecords(DOCUMENT_MODEL);
+        result = session.getRecords(DOCUMENT_MODEL)
+        result.hawkId = session.credentials.id;
+        return result;
       });
   }
 };

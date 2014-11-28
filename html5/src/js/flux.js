@@ -19,14 +19,16 @@ var FilesStore = Fluxxor.createStore({
 
   setInitialData: function(payload) {
     if (payload === undefined) {
-      payload = [];
+      payload = {hawkId: '', records: []};
     }
-    this.files = payload;
+    this.hawkId = payload.hawkId;
+    this.files = payload.records;
     this.emit("change");
   },
 
   getState: function() {
     return {
+      hawkId: this.hawkId,
       files: this.files
     };
   }

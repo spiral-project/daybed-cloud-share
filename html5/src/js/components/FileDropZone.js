@@ -25,7 +25,7 @@ var FileDropZone = React.createClass({
         var messageKey = encrypted.messageKey;
         var encryptedMessage = encrypted.encryptedMessage;
 
-        var publicKey = localStorage.getItem("cloud-share:pubKey");
+        var publicKey = localStorage.getItem("cloud-share:publicKey");
         var encrypted = crypto.encryptDocumentKey(messageKey, publicKey);
 
         this.props.upload(file.name, encryptedMessage, {
