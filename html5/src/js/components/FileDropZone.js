@@ -6,6 +6,8 @@ var React = require("react");
 var FileDrop = require('../filedrop');
 var crypto = require('../crypto');
 
+var MAX_SIZE = 1024 * 1024;
+
 
 var FileDropZone = React.createClass({
   componentDidMount: function() {
@@ -20,6 +22,11 @@ var FileDropZone = React.createClass({
       reader.onload = function (event) {
         // Get file content
         var content = event.target.result;
+
+        if (content.length > MAX_SIZE) {
+          alert(file.name + " size is too big for this PoC.");
+          return;
+        }
 
         var encrypted = crypto.encryptMessage(content);
         var messageKey = encrypted.messageKey;
