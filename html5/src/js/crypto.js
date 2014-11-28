@@ -15,8 +15,8 @@ var generateKeypair = function() {
 }
 
 var encryptDocumentKey = function(key, recipientPubKey) {
-  recipientPubKey = nacl.from_hex(recipientPubKey);
   key = nacl.from_hex(key);
+  recipientPubKey = nacl.from_hex(recipientPubKey);
 
   var tempKeyPair = nacl.crypto_box_keypair();
   var nonce = nacl.crypto_box_random_nonce();
@@ -36,11 +36,7 @@ var decryptDocumentKey = function(encryptedKeyWrapper, tempPublicKey,
   var tempPublicKey = nacl.from_hex(tempPublicKey);
   var privateKey = nacl.from_hex(privateKey);
 
-  try {
-    return nacl.crypto_box_open(encryptedKey, nonce, tempPublicKey, privateKey);
-  } catch (e) {
-    console.log(e);
-  }
+  return nacl.to_hex(nacl.crypto_box_open(encryptedKey, nonce, tempPublicKey, privateKey));
 }
 
 var encryptMessage = function(message) {
@@ -58,7 +54,13 @@ var encryptMessage = function(message) {
 
 var decryptMessage = function(encryptedMessageWrapper, encryptedKey,
                               tempPublicKey, privateKey) {
-  var messageKey = decryptDocumentKey(encryptedKey, tempPublicKey, privateKey);
+
+  console.log("try to decrypt the message");
+
+  var messageKey = nacl.from_hex(
+    decryptDocumentKey(encryptedKey, tempPublicKey, privateKey));
+
+  console.log("document key decrypted");
 
   var encryptedMessageWrapper = nacl.from_hex(encryptedMessageWrapper);
   var nonce = encryptedMessageWrapper.subarray(0, nacl.crypto_secretbox_NONCEBYTES);

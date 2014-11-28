@@ -6,24 +6,23 @@ var DaybedStorage = function(config) {
 
 var DOCUMENT_MODEL = "daybed:cloud_share:document";
 var PUBLIC_KEY_MODEL = "daybed:cloud_share:pubkey_store";
-var DAYBED_HOST = "http://localhost:8000";
 
 DaybedStorage.prototype = {
 
   login: function() {
-    return Daybed.fxaOAuth.login(DAYBED_HOST, {
-      redirect_uri: document.location.href + "#/connect"
+    return Daybed.fxaOAuth.login(this.host, {
+      redirect_uri: document.location.href.split('#')[0] + "#/connect"
     });
   },
 
   getToken: function(code, state) {
-    console.log("getToken", code, state);
-    return Daybed.fxaOAuth.getToken(DAYBED_HOST, {code: code, state: state})
+    return Daybed.fxaOAuth.getToken(this.host, {code: code, state: state})
       .then(function(data) {
         return {
-          keypair: crypto.generateKeypair(data.profile.uid),
+          secret: data.profile.uid,
+          email: data.profile.email,
           token: data.token,
-          hawkId: data.hawkId
+          hawkId: data.credentials.id,
         };
       });
   },
@@ -75,18 +74,19 @@ DaybedStorage.prototype = {
           query: {
             filtered: {
               query: {
-                match: {userId: email},
+                match: {user_id: email},
               }
             }
           }
         };
 
-        return session.searchRecord(PUBLIC_KEY_MODEL, query).then(
+        return session.searchRecords(PUBLIC_KEY_MODEL, query).then(
           function(results) {
-            if (results.length === 0) {
+            var hits = results.hits.hits;
+            if (hits.length === 0) {
               throw new Error("No public key found for " + email);
             }
-            return results[0];
+            return hits[0]._source;
           });
       });
   },
@@ -100,6 +100,16 @@ DaybedStorage.prototype = {
       return session.saveRecord(DOCUMENT_MODEL, result).then(function() {
         return session.addRecordAuthor(DOCUMENT_MODEL, fileId, participantHawkId);
       });
+    });
+  },
+
+  uploadPublicKey: function(hawkToken, publicKey) {
+    return this.bindSession(hawkToken).then(function(session) {
+      return session.saveRecord(PUBLIC_KEY_MODEL, {
+        hawk_id: session.credentials.id,
+        id: session.credentials.id, // this is for retro compat with python cli.
+        pub: publicKey
+      }, {replace: true});
     });
   }
 };

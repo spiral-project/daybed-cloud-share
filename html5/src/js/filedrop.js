@@ -543,7 +543,7 @@ global.extend(global, {
   logging: true,
 
   // Indicates if console.log and console.dir are available for usage.
-  hasConsole: 'console' in window && console.log && console.dir,
+  hasConsole: false,
 
   // If set must be a function that's called on every event being fired.
   // See how it works in callAllOfObject().

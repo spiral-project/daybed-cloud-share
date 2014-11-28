@@ -12,11 +12,9 @@ var FileDropZone = require("./FileDropZone");
 var FilesList = require("./FilesList");
 
 var Footer = require("./Footer");
+var utils = require("../utils");
+var crypto = require("../crypto");
 
-function validateEmail(email) {
-    var re = /^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-    return re.test(email);
-}
 
 var CloudShareApp = React.createClass({
   mixins: [
@@ -29,10 +27,13 @@ var CloudShareApp = React.createClass({
   },
 
   loadFiles: function() {
-    this.props.backend.loadFiles(this.state.hawkSessionToken)
-      .then(function(doc) {
-        this.getFlux().actions.setFiles(doc.records);
-      }.bind(this));
+    if (this.state.hawkSessionToken) {
+      this.props.backend.loadFiles(this.state.hawkSessionToken)
+        .then(function(doc) {
+          this.getFlux().actions.setFiles(doc.records);
+        }.bind(this))
+        .catch(function(err) { throw err });
+    }
   },
 
   uploadFile: function(filename, encryptedMessage, participantKey) {
@@ -54,7 +55,7 @@ var CloudShareApp = React.createClass({
   shareFile: function(fileId) {
     return function() {
       var email = "";
-      while (!(email === null || validateEmail(email))) {
+      while (!(email === null || utils.validateEmail(email))) {
         email = prompt("Enter the email address with whom you'd like to share this document: ");
       }
 
@@ -67,25 +68,26 @@ var CloudShareApp = React.createClass({
           return file.id === fileId;
         })[0];
 
-        var message_key = decryptDocumentKey(
+        var message_key = crypto.decryptDocumentKey(
           file.participantsKeys[this.state.hawkId]['encrypted_key'],
           file.participantsKeys[this.state.hawkId]['temp_public_key'],
-          localStorage.getItem("cloud-share:privateKey"));
+          this.state.privateKey);
 
-        var newParticipantKey = encryptDocumentKey(message_key, publicKeyDoc.pub);
+        var newParticipantKey = crypto.encryptDocumentKey(message_key, publicKeyDoc.pub);
         file.participantsKeys[publicKeyDoc.hawk_id] = {
           'encrypted_key': newParticipantKey.encryptedKey,
           'temp_public_key': newParticipantKey.tempPublicKey
         };
 
-        var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
-        this.props.backend.shareFile(
-          hawkToken, fileId, publicKeyDoc.hawk_id, file.participantsKeys
+        return this.props.backend.shareFile(
+          this.state.hawkSessionToken,
+          fileId, publicKeyDoc.hawk_id, file.participantsKeys
         ).then(function() {
             console.log(fileId + " has been shared with " + publicKeyDoc.user_id);
           });
 
-      }).catch(function(err) {
+      }.bind(this)).catch(function(err) {
+        console.log(err);
         alert("No public key found for: " + email +
               ". Ask this person to connect once to Daybed Cloud Share.");
       });
@@ -98,14 +100,20 @@ var CloudShareApp = React.createClass({
   },
 
   render: function() {
+    var sharing = <div>Please login</div>;
+    if (this.state.hawkSessionToken) {
+      sharing = <div>
+        <FileDropZone upload={this.uploadFile} />
+          <FilesList files={this.state.files} hawkId={this.state.hawkId}
+                     removeFile={this.removeFile} shareFile={this.shareFile} />
+        </div>;
+    }
     return (
       <div className="site-wrapper">
         <div className="site-wrapper-inner">
         <div className="cover-container">
             <Header backend={this.props.backend}/>
-            <FileDropZone upload={this.uploadFile} />
-            <FilesList files={this.state.files} hawkId={this.state.hawkId}
-                       removeFile={this.removeFile} shareFile={this.shareFile} />
+            {sharing}
             <Footer />
           </div>
         </div>

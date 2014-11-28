@@ -22,6 +22,11 @@ var FilesList = React.createClass({
       <ul className="lead">
       {
         this.props.files.map(function(file) {
+          console.log("test", file.content, file.participantsKeys[this.props.hawkId]['encrypted_key'],
+            file.participantsKeys[this.props.hawkId]['temp_public_key'],
+            localStorage.getItem("cloud-share:privateKey"));
+
+
           var fileContent = crypto.decryptMessage(
             file.content, file.participantsKeys[this.props.hawkId]['encrypted_key'],
             file.participantsKeys[this.props.hawkId]['temp_public_key'],

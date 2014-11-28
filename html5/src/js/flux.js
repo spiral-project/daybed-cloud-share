@@ -11,9 +11,11 @@ var constants = {
 var FilesStore = Fluxxor.createStore({
   initialize: function() {
     this.files = [];
+    this.hawkId = localStorage.getItem('cloud-share:hawkId');
     this.privateKey = localStorage.getItem('cloud-share:privateKey');
     this.publicKey =  localStorage.getItem('cloud-share:publicKey');
-    this.hawkSessionToken = localStorage.getItem('cloud-share:hawkSessionToken')
+    this.hawkSessionToken = localStorage.getItem('cloud-share:hawkSessionToken');
+    this.email = localStorage.getItem('cloud-share:email');
 
     // XXX. Make this evolve, it's a pain.
     this.bindActions(
@@ -29,22 +31,28 @@ var FilesStore = Fluxxor.createStore({
 
   getState: function() {
     return {
-      hawkId: this.hawkId,
       files: this.files,
+      hawkId: this.hawkId,
       publicKey: this.publicKey,
-      privateKey: this.privateKey
+      privateKey: this.privateKey,
+      email: this.email,
+      hawkSessionToken: this.hawkSessionToken
     };
   },
 
   setCredentials: function(data) {
     localStorage.setItem('cloud-share:publicKey', data.keypair.publicKey);
     localStorage.setItem('cloud-share:privateKey', data.keypair.privateKey);
-    localStorage.setItem('cloud-share:hawkSessionToken', data.hawkSessionToken);
+    localStorage.setItem('cloud-share:hawkSessionToken', data.token);
+    localStorage.setItem('cloud-share:email', data.email);
+    localStorage.setItem('cloud-share:hawkId', data.hawkId);
 
-    this.hawkId = hawkId;
-    this.publicKey = publicKey;
-    this.privateKey = privateKey;
-    this.hawkSessionToken = hawkSessionToken;
+    this.publicKey = data.keypair.publicKey;
+    this.privateKey = data.keypair.privateKey;
+    this.hawkSessionToken = data.token;
+    this.email = data.email;
+    this.hawkId = data.hawkId;
+
     this.emit("change");
   }
 
