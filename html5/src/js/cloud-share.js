@@ -25,12 +25,13 @@ if (document.location.href.indexOf("#/connect") !== -1) {
       utils.getParameterByName("code"),
       utils.getParameterByName("state"))
     .then(function(data) {
+      document.location.hash = "";
+
       var store = flux.store("FilesStore");
-      data.keypair = crypto.loadKeypair(data.secret + data.secret);
+      data.keypair = crypto.loadKeypair(data.secret);
       backend.uploadPublicKey(data.token, data.keypair.publicKey)
         .then(function() {
           store.setCredentials(data);
-          document.location.hash = "";
           displayApp();
         });
     });

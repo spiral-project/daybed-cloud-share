@@ -3,15 +3,15 @@ var nacl = nacl_factory.instantiate();
 
 
 var loadKeypair = function(key) {
-  var publicKey = nacl.crypto_scalarmult_base(key);
+  var publicKey = nacl.crypto_scalarmult_base(nacl.from_hex(key));
   return {
     publicKey: nacl.to_hex(publicKey),
-    privateKey: nacl.to_hex(key)
+    privateKey: key
   }
 }
 
 var generateKeypair = function() {
-  return loadKeypair(nacl.random_bytes(nacl.crypto_box_SECRETKEYBYTES));
+  return loadKeypair(nacl.to_hex(nacl.random_bytes(nacl.crypto_box_SECRETKEYBYTES)));
 }
 
 var encryptDocumentKey = function(key, recipientPubKey) {

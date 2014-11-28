@@ -19,7 +19,7 @@ DaybedStorage.prototype = {
     return Daybed.fxaOAuth.getToken(this.host, {code: code, state: state})
       .then(function(data) {
         return {
-          secret: data.profile.uid,
+          secret: (data.profile.uid + data.profile.uid).substr(0, 64),
           email: data.profile.email,
           token: data.token,
           hawkId: data.credentials.id,
