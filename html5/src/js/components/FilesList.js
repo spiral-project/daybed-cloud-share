@@ -30,6 +30,7 @@ var FilesList = React.createClass({
           return (
             <li key={file.id}>
               <div className="pull-right">
+                <a href="#" onClick={this.props.shareFile(file.id)}><i className="fa-share fa fa-1x"></i> Share</a> — &nbsp;
                 <a href="#" onClick={this.props.removeFile(file.id)}><i className="fa-remove fa fa-1x"></i> Delete</a>
                </div>
               <a href={fileContent} download={file.filename}><i className="fa-file fa fa-1x"></i>

@@ -13,6 +13,11 @@ var FilesList = require("./FilesList");
 
 var Footer = require("./Footer");
 
+function validateEmail(email) {
+    var re = /^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+    return re.test(email);
+}
+
 var CloudShareApp = React.createClass({
   mixins: [
     FluxMixin,
@@ -46,6 +51,48 @@ var CloudShareApp = React.createClass({
     }.bind(this);
   },
 
+  shareFile: function(fileId) {
+    return function() {
+      var email = "";
+      while (!(email === null || validateEmail(email))) {
+        email = prompt("Enter the email address with whom you'd like to share this document: ");
+      }
+
+      if (email === null) {
+        return;
+      }
+
+      this.props.backend.getPublicKey(email).then(function(publicKeyDoc) {
+        var file = this.state.files.filter(function(file) {
+          return file.id === fileId;
+        })[0];
+
+        var message_key = decryptDocumentKey(
+          file.participantsKeys[this.state.hawkId]['encrypted_key'],
+          file.participantsKeys[this.state.hawkId]['temp_public_key'],
+          localStorage.getItem("cloud-share:privateKey"));
+
+        var newParticipantKey = encryptDocumentKey(message_key, publicKeyDoc.pub);
+        file.participantsKeys[publicKeyDoc.hawk_id] = {
+          'encrypted_key': newParticipantKey.encryptedKey,
+          'temp_public_key': newParticipantKey.tempPublicKey
+        };
+
+        var hawkToken = localStorage.getItem("cloud-share:Hawk-Session-Token");
+        this.props.backend.shareFile(
+          hawkToken, fileId, publicKeyDoc.hawk_id, file.participantsKeys
+        ).then(function() {
+            console.log(fileId + " has been shared with " + publicKeyDoc.user_id);
+          });
+
+      }).catch(function(err) {
+        alert("No public key found for: " + email +
+              ". Ask this person to connect once to Daybed Cloud Share.");
+      });
+
+    }.bind(this);
+  },
+
   getStateFromFlux: function() {
     return this.getFlux().store("FilesStore").getState();
   },
@@ -58,7 +105,7 @@ var CloudShareApp = React.createClass({
             <Header />
             <FileDropZone upload={this.uploadFile} />
             <FilesList files={this.state.files} hawkId={this.state.hawkId}
-                       removeFile={this.removeFile} />
+                       removeFile={this.removeFile} shareFile={this.shareFile} />
             <Footer />
           </div>
         </div>

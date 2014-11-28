@@ -1,23 +1,37 @@
 {
     "definition": {
-        "description": "Daybed Public Key Store", 
+        "description": "Daybed Public Key Store",
         "fields": [
             {
-                "hint": "The public key", 
-                "label": "PublicKey", 
-                "name": "pub", 
-                "required": true, 
+                "hint": "The public key",
+                "label": "PublicKey",
+                "name": "pub",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "hint": "The user id",
+                "label": "User Id",
+                "name": "user_id",
+                "required": true,
+                "type": "userid"
+            },
+            {
+                "hint": "The hawk id",
+                "label": "Hawk Id",
+                "name": "hawk_id",
+                "required": true,
                 "type": "string"
             }
-        ], 
+        ],
         "title": "publickey-store"
-    }, 
+    },
     "permissions": {
         "Everyone": [
-            "create_record", 
-            "delete_own_records", 
-            "read_definition", 
-            "read_all_records", 
+            "create_record",
+            "delete_own_records",
+            "read_definition",
+            "read_all_records",
             "update_own_records"
         ]
     }

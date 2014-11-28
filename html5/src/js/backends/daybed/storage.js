@@ -5,6 +5,7 @@ var DaybedStorage = function(config) {
 };
 
 var DOCUMENT_MODEL = "daybed:cloud_share:document";
+var PUBLIC_KEY_MODEL = "daybed:cloud_share:pubkey_store";
 
 DaybedStorage.prototype = {
 
@@ -48,6 +49,41 @@ DaybedStorage.prototype = {
       .then(function(session){
         return session.deleteRecord(DOCUMENT_MODEL, fileId);
       });
+  },
+
+  getPublicKey: function(email) {
+    return Daybed.startSession(this.host, {anonymous: true}).then(
+      function(session) {
+        var query = {
+          query: {
+            filtered: {
+              query: {
+                match: {userId: email},
+              }
+            }
+          }
+        };
+
+        return session.searchRecord(PUBLIC_KEY_MODEL, query).then(
+          function(results) {
+            if (results.length === 0) {
+              throw new Error("No public key found for " + email);
+            }
+            return results[0];
+          });
+      });
+  },
+
+  shareFile: function(hawkToken, fileId, participantHawkId, participantsKeys) {
+    return this.bindSession(hawkToken).then(function(session) {
+      var result = {
+        id: fileId,
+        participantsKeys: participantsKeys
+      };
+      return session.saveRecord(DOCUMENT_MODEL, result).then(function() {
+        return session.addRecordAuthor(DOCUMENT_MODEL, fileId, participantHawkId);
+      });
+    });
   }
 };
 

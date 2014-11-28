@@ -1,21 +1,21 @@
 {
     "definition": {
         "title": "Document",
-        "description": "Daybed Cloud Share Document Definition", 
+        "description": "Daybed Cloud Share Document Definition",
         "fields": [
             {
-                "hint": "The filename", 
-                "label": "Filename", 
-                "name": "filename", 
-                "required": true, 
+                "hint": "The filename",
+                "label": "Filename",
+                "name": "filename",
+                "required": true,
                 "type": "string"
             },
             {
-                "hint": "Encrypted File Content", 
-                "label": "Encrypted content", 
-                "name": "content", 
-                "required": true, 
-                "type": "text"
+                "hint": "Encrypted File Content",
+                "label": "Encrypted content",
+                "name": "content",
+                "required": true,
+                "type": "blob"
             },
             {
                 "hint": "Document keys for each participant.",
@@ -25,13 +25,13 @@
                 "type": "json"
             }
         ]
-    }, 
+    },
     "permissions": {
         "Everyone": [
             "create_record",
             "read_own_records",
             "update_own_records",
-            "delete_own_records", 
+            "delete_own_records",
             "read_definition"
         ]
     }
