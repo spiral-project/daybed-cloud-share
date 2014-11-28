@@ -112,7 +112,7 @@ var CloudShareApp = React.createClass({
       <div className="site-wrapper">
         <div className="site-wrapper-inner">
         <div className="cover-container">
-            <Header backend={this.props.backend}/>
+            <Header backend={this.props.backend} />
             {sharing}
             <Footer />
           </div>
